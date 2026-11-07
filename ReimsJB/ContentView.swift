@@ -3,6 +3,7 @@ import UIKit
 
 struct ContentView: View {
     @StateObject private var store = ResearchStore()
+    @StateObject private var evidenceVault = EvidenceVault()
     @State private var showLab = false
     @State private var showPDF = false
     @State private var showGate = false
@@ -15,8 +16,10 @@ struct ContentView: View {
                 .tabItem { Label("Diagnóstico", systemImage: "stethoscope") }
             compatibilityPage
                 .tabItem { Label("Compatibilidade", systemImage: "checkmark.shield") }
-            researchPage
+            ResearchCatalogView()
                 .tabItem { Label("Pesquisa", systemImage: "books.vertical") }
+            EvidenceWorkspaceView(vault: evidenceVault, device: store.snapshot?.device)
+                .tabItem { Label("Evidências", systemImage: "doc.text.magnifyingglass") }
             bootstrapPage
                 .tabItem { Label("Bootstrap", systemImage: "shippingbox") }
             logsPage
@@ -48,7 +51,7 @@ struct ContentView: View {
                         Label("ReimsJB", systemImage: "iphone.gen3")
                             .font(.largeTitle.bold())
                             .foregroundStyle(.primary)
-                        Text("Pesquisa rootless · versão 0.5")
+                        Text("Pesquisa rootless · versão 0.6")
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                         HStack {
@@ -184,52 +187,6 @@ struct ContentView: View {
         }
     }
 
-    private var researchPage: some View {
-        NavigationStack {
-            List {
-                Section("Vulnerabilidades publicamente documentadas") {
-                    ForEach(ReimsResearchEngine.findings) { finding in
-                        VStack(alignment: .leading, spacing: 7) {
-                            Text(finding.id).font(.headline.monospaced())
-                            Text(finding.summary).font(.subheadline)
-                            Text(finding.patch)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(finding.relevance)
-                                .font(.caption)
-                                .foregroundStyle(.orange)
-                            Link(destination: finding.reference) {
-                                Label("Ver boletim original da Apple", systemImage: "arrow.up.right.square")
-                                    .font(.subheadline)
-                            }
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-                Section("Fontes para verificação") {
-                    ForEach(ReimsResearchEngine.sourceCatalog) { item in
-                        VStack(alignment: .leading, spacing: 5) {
-                            Link(destination: item.url) {
-                                Text(item.title)
-                                    .font(.headline)
-                            }
-                            Text(item.kind).font(.caption).foregroundStyle(.secondary)
-                            Text(item.explanation)
-                                .font(.subheadline)
-                        }
-                        .padding(.vertical, 3)
-                    }
-                }
-                Section {
-                    Text("Fontes catalogadas em 7/11/2026; este aplicativo não consulta servidores automaticamente. Confirme as novidades nas páginas originais. Um anúncio não é evidência de integração.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .navigationTitle("Pesquisa")
-        }
-    }
-
     private var bootstrapPage: some View {
         NavigationStack {
             List {
@@ -310,7 +267,7 @@ struct ContentView: View {
                         .foregroundStyle(.secondary)
                 }
                 Section("Projeto") {
-                    info("Versão", "0.5.0")
+                    info("Versão", "0.6.0")
                     info("Plataforma", "SwiftUI / iOS 16+")
                     info("Alvo de pesquisa", "iPhone14,5 · 27.0.1")
                     Link(destination: URL(string: "https://github.com/sam-20009/ReimsJB")!) {

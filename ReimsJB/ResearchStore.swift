@@ -20,7 +20,7 @@ final class ResearchStore: ObservableObject {
     init() {
         // O consentimento não é necessário para mostrar diagnósticos passivos.
         allowLocalTests = UserDefaults.standard.bool(forKey: "reims.allowLocalTests")
-        addLog("INFO", "ReimsJB 0.5 iniciado. Nenhuma modificação no sistema.")
+        addLog("INFO", "ReimsJB 0.6 iniciado. Nenhuma modificação no sistema.")
     }
 
     func addLog(_ level: String, _ message: String) {
@@ -47,13 +47,13 @@ final class ResearchStore: ObservableObject {
         let lines = logs.map { entry in
             "[\(entry.time.formatted(date: .numeric, time: .standard))] \(entry.level): \(entry.message)"
         }
-        return (["ReimsJB 0.5 — logs locais", "Sem alterações no iOS", ""] + lines).joined(separator: "\n")
+        return (["ReimsJB 0.6 — logs locais", "Sem alterações no iOS", ""] + lines).joined(separator: "\n")
     }
 
     var exportedReport: String {
-        guard let snapshot else { return "ReimsJB 0.5: ainda não verificado." }
+        guard let snapshot else { return "ReimsJB 0.6: ainda não verificado." }
         var lines = [
-            "ReimsJB 0.5 — relatório de compatibilidade",
+            "ReimsJB 0.6 — relatório de compatibilidade",
             "Data: \(snapshot.checkedAt.formatted())",
             snapshot.device.exportText,
             "",
