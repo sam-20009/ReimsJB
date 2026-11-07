@@ -1,52 +1,44 @@
 name: Build ReimsJB (unsigned)
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
-
 permissions:
   contents: read
-
 jobs:
   build:
     runs-on: macos-15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-
       - name: Install XcodeGen
         run: brew install xcodegen
-
-      - name: Generate Xcode project
+      - name: Generate project
         run: xcodegen generate
-
-      - name: Build for iPhone (unsigned)
+      - name: Compile unsigned iPhone app
         run: |
-          xcodebuild \
-            -project ReimsJB.xcodeproj \
-            -scheme ReimsJB \
-            -configuration Release \
-            -sdk iphoneos \
-            -derivedDataPath build/DerivedData \
-            CODE_SIGNING_ALLOWED=NO
-
-      - name: Package unsigned IPA
+          set -euo pipefail
+          xcodebuild -project ReimsJB.xcodeproj -scheme ReimsJB -configuration Release -sdk iphoneos -derivedDataPath build/DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: Package IPA and verify
         run: |
-          APP_PATH="build/DerivedData/Build/Products/Release-iphoneos/ReimsJB.app"
-          test -d "$APP_PATH"
+          set -euo pipefail
+          APP="build/DerivedData/Build/Products/Release-iphoneos/ReimsJB.app"
+          test -f "$APP/ReimsJB"
           mkdir -p build/Payload
-          cp -R "$APP_PATH" build/Payload/
+          cp -R "$APP" build/Payload/
           cd build
-          /usr/bin/zip -r ReimsJB-unsigned.ipa Payload
-
-      - name: Upload IPA artifact
+          zip -qry ReimsJB-unsigned.ipa Payload
+          unzip -t ReimsJB-unsigned.ipa
+          unzip -l ReimsJB-unsigned.ipa | grep 'Payload/ReimsJB.app/ReimsJB'
+          shasum -a 256 ReimsJB-unsigned.ipa > ReimsJB-unsigned.ipa.sha256
+          cat ReimsJB-unsigned.ipa.sha256
+      - name: Publish IPA and checksum
         uses: actions/upload-artifact@v4
         with:
           name: ReimsJB-unsigned-ipa
-          path: build/ReimsJB-unsigned.ipa
+          path: |
+            build/ReimsJB-unsigned.ipa
+            build/ReimsJB-unsigned.ipa.sha256
           if-no-files-found: error
           retention-days: 14

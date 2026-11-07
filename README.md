@@ -1,55 +1,30 @@
-# ReimsJB
+# ReimsJB 0.5 — diagnóstico e pesquisa rootless
 
-Aplicativo open source SwiftUI para **diagnóstico verificável de compatibilidade**, com interface simples para iPhone e preparação do projeto para integrações futuras.
+**Alvo:** iPhone 13 (iPhone14,5), A15, iOS 27.0.1 (24A446).
+**Situação real:** aplicativo de pesquisa. Não possui exploit KRW, bypass SPTM, bootstrap rootless nem instalação automática de Sileo.
 
-## Versão 0.4 — estado real
+## Funcionalidades
+- Sete telas SwiftUI: Início, Diagnóstico, Compatibilidade, Pesquisa, Bootstrap, Logs e Ajustes. O iOS pode agrupar algumas guias em Mais.
+- ReimsResearchEngine: seis estados de análise; catálogo de referências; verificação explícita dos pré-requisitos.
+- Detecção real via UIDevice, uname e sysctl; a sandbox limita dados privilegiados.
+- Referências estáticas à documentação da Apple, Dopamine e histórico comunitário, sem tratar um CVE como exploit confirmado.
+- Logs com horários, exportação e limite de 300 eventos em memória.
+- Laboratório opcional de APIs dentro da sandbox e inspeção estática de PDFs, preservados da versão 0.4.
+- O botão de jailbreak somente explica o que falta e não executa nenhuma modificação.
 
-- Identifica modelo de hardware (por exemplo, `iPhone14,5`), iOS, build e kernel.
-- Classifica a família A15, identifica iOS 27.0.1 e mostra pré-requisitos.
-- Verifica somente se há *indício* de bootstrap rootless; a sandbox pode ocultar dados.
-- Exporta relatório em texto pelo compartilhamento do iOS.
-- Mostra opção para abrir Sileo se houver indício de rootless e o aplicativo já estiver instalado.
-- **Não contém exploit KRW, bypass SPTM, injeção, persistência nem instalador Sileo.**
-- O botão de jailbreak permanece desativado até que um backend real e validado seja integrado. Não faz tentativas repetidas que possam provocar travamentos.
+## Estrutura
+- ReimsJB/ReimsResearchEngine.swift: componentes, estados, evidências e interface modular para pesquisa futura.
+- ReimsJB/ResearchStore.swift: logs, sessão e relatórios.
+- ReimsJB/ContentView.swift: sete telas nativas.
+- ReimsJB/DeviceReport.swift: metadados do aparelho.
+- ReimsJB/SafeResearchView.swift e PDFResearchView.swift: experimentos não destrutivos.
+- ReimsJBTests: testes de identidade, gate e fontes.
 
-O [ios27-jb-tracker](https://github.com/iMaxTomas/ios27-jb-tracker), de iMaxTomas (CC BY 4.0), foi consultado como fonte informativa sobre o estado das pesquisas. **O tracker não distribui exploits** e não é código de jailbreak. A referência não implica afiliação ou endosso.
+## Compilação e testes
+- Actions → **Build ReimsJB (unsigned)**: gera IPA não assinado, testa a integridade ZIP, calcula e publica SHA-256.
+- Actions → **ReimsJB unit tests**: executa XCTest num simulador iPhone disponível, registra xcresult.
+- macOS: instale Xcode + XcodeGen, execute xcodegen generate e abra o projeto gerado.
 
-## Laboratório de segurança 0.3
+**O IPA não assinado não instala diretamente no iPhone.** Para uso autorizado, abra o projeto no Xcode, ajuste Signing & Capabilities para sua equipe Apple Development e use Run com o iPhone conectado. Nunca envie credenciais ou certificados a terceiros. Compilação no macOS e testes no simulador não equivalem a testes físicos no A15.
 
-A tela **Laboratório de análise local** permite executar até **2.000 entradas determinísticas** contra serializadores e decodificadores de nível de aplicativo (Foundation: JSON, Property List, URLComponents, Base64 e UTF-8). Inclui teste temporário de leitura/escrita na sandbox.
-
-**Escopo**: testes somente no processo do próprio app, com limite de 128 bytes por caso, terminação manual e parada quando o iPhone indicar temperatura elevada. Nenhum arquivo pessoal, driver, kernel ou chip é modificado. O aplicativo não tenta escape de sandbox, injeção de código, brute force de kernel, acesso root ou instalação automática de Sileo.
-
-Rejeições de JSON e Property List **são esperadas** para dados aleatórios e **não significam vulnerabilidades**. Uma inconsistência precisa de investigação e reprodução antes de qualquer conclusão. Mesmo 2.000 casos sem falhas não garantem que o sistema seja seguro.
-
-## Laboratório PDF — 0.4
-
-O botão **Analisar PDF (Calif)** abre um módulo de inspeção estática local:
-- Importação de PDF pelo app Arquivos, com limite de 8 MB e acesso temporário apenas ao arquivo selecionado.
-- Verificação de cabeçalho (%PDF-), versão declarada, marcador final %%EOF, SHA-256 e marcadores textuais de ações, formulários ou anexos.
-- PDF de demonstração benigno, gerado localmente, para testar o fluxo sem baixar arquivos.
-- Relatório exportável, sem upload nem execução de conteúdo de PDF.
-- Progresso explícito dos pré-requisitos da cadeia Calif (parser, kernel, SPTM e Sileo).
-
-**Importante:** esta funcionalidade não contém o exploit privado da Calif, não explora leitores de PDF, não consegue fazer jailbreak no A15 e não detecta todas as ameaças em PDF. A presença de um marcador isolado não comprova malícia ou vulnerabilidade. O usuário deve evitar importar PDFs desconhecidos.
-
-## Compilar um IPA não assinado pelo GitHub
-
-1. Acesse **Actions → Build ReimsJB (unsigned)**.
-2. Clique em **Run workflow**, ou veja o build iniciado pelo push.
-3. Baixe o artefato **ReimsJB-unsigned-ipa** quando a compilação concluir.
-4. Para executar no iPhone, o pacote precisa de assinatura legítima compatível com seu dispositivo.
-
-O compilador do GitHub Actions gera o binário, mas não comprova que o app funciona no iOS 27.0.1 em hardware real. É necessário testá-lo no iPhone.
-
-## Compilar localmente
-
-Requer macOS, Xcode e XcodeGen.
-
-```sh
-brew install xcodegen
-xcodegen generate
-xcodebuild -project ReimsJB.xcodeproj -scheme ReimsJB -configuration Release -sdk iphoneos CODE_SIGNING_ALLOWED=NO
-```
-
-**Não instale IPAs desconhecidos que afirmem ter jailbreak para A15/iOS 27.0.1 sem validação independente.**
+Leia [o relatório de compatibilidade](Docs/CompatibilityReport.md). O tracker comunitário [ios27-jb-tracker](https://github.com/iMaxTomas/ios27-jb-tracker), de iMaxTomas (CC BY 4.0), é citado com atribuição; não distribui um jailbreak.
