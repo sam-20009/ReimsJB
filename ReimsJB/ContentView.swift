@@ -4,6 +4,7 @@ import UIKit
 struct ContentView: View {
     @State private var report = DeviceReport.capture()
     @State private var showBlocker = false
+    @State private var showResearch = false
 
     var body: some View {
         NavigationStack {
@@ -64,6 +65,14 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
 
                         Button {
+                            showResearch = true
+                        } label: {
+                            Label("Laboratório de análise local", systemImage: "checkmark.shield")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button {
                             showBlocker = true
                         } label: {
                             Label("Iniciar jailbreak", systemImage: "lock.open")
@@ -101,6 +110,9 @@ struct ContentView: View {
             .background(Color(uiColor: .systemGroupedBackground))
             .navigationTitle("ReimsJB")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showResearch) {
+                SafeResearchView()
+            }
             .alert("Cadeia de jailbreak indisponível", isPresented: $showBlocker) {
                 Button("Entendi", role: .cancel) { }
             } message: {
