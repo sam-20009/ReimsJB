@@ -1,29 +1,31 @@
 # ReimsJB
 
-Aplicativo SwiftUI de laboratório para organizar estudos e documentação sobre componentes do iOS.
+Aplicativo open source SwiftUI para **diagnóstico verificável de compatibilidade**, com interface simples para iPhone e preparação do projeto para integrações futuras.
 
-## Estado atual
+## Versão 0.2 — estado real
 
-**Versão 0.1.0 — protótipo informativo.** Não é um jailbreak e não contém exploit, bypass de assinatura, persistência ou mecanismo para contornar a sandbox do iOS.
+- Identifica modelo de hardware (por exemplo, `iPhone14,5`), iOS, build e kernel.
+- Classifica a família A15, identifica iOS 27.0.1 e mostra pré-requisitos.
+- Verifica somente se há *indício* de bootstrap rootless; a sandbox pode ocultar dados.
+- Exporta relatório em texto pelo compartilhamento do iOS.
+- Mostra opção para abrir Sileo se houver indício de rootless e o aplicativo já estiver instalado.
+- **Não contém exploit KRW, bypass SPTM, injeção, persistência nem instalador Sileo.**
+- O botão de jailbreak permanece desativado até que um backend real e validado seja integrado. Não faz tentativas repetidas que possam provocar travamentos.
 
-## Estrutura
+O [ios27-jb-tracker](https://github.com/iMaxTomas/ios27-jb-tracker), de iMaxTomas (CC BY 4.0), foi consultado como fonte informativa sobre o estado das pesquisas. **O tracker não distribui exploits** e não é código de jailbreak. A referência não implica afiliação ou endosso.
 
-- `ReimsJB/`: interface SwiftUI.
-- `project.yml`: configuração do projeto Xcode gerada pelo XcodeGen.
-- `.github/workflows/build-ipa.yml`: compilação automatizada no GitHub Actions.
+## Compilar um IPA não assinado pelo GitHub
 
-## Gerar o IPA
+1. Acesse **Actions → Build ReimsJB (unsigned)**.
+2. Clique em **Run workflow**, ou veja o build iniciado pelo push.
+3. Baixe o artefato **ReimsJB-unsigned-ipa** quando a compilação concluir.
+4. Para executar no iPhone, o pacote precisa de assinatura legítima compatível com seu dispositivo.
 
-1. Abra a aba **Actions** do repositório.
-2. Selecione **Build ReimsJB (unsigned)**.
-3. Clique em **Run workflow**.
-4. Quando terminar, baixe o artefato **ReimsJB-unsigned-ipa**.
+O compilador do GitHub Actions gera o binário, mas não comprova que o app funciona no iOS 27.0.1 em hardware real. É necessário testá-lo no iPhone.
 
-O arquivo gerado é **não assinado**. Ele serve como artefato de compilação e não será instalado diretamente em um iPhone. Para instalar, será necessário assinar o app por um método legítimo compatível com sua conta e dispositivo.
+## Compilar localmente
 
-## Compilação local
-
-Requer macOS, Xcode e XcodeGen:
+Requer macOS, Xcode e XcodeGen.
 
 ```sh
 brew install xcodegen
@@ -31,6 +33,4 @@ xcodegen generate
 xcodebuild -project ReimsJB.xcodeproj -scheme ReimsJB -configuration Release -sdk iphoneos CODE_SIGNING_ALLOWED=NO
 ```
 
-## Compatibilidade
-
-O projeto declara iOS 16.0 como versão mínima. A execução em versões futuras do iOS deve ser validada em dispositivo real.
+**Não instale IPAs desconhecidos que afirmem ter jailbreak para A15/iOS 27.0.1 sem validação independente.**
