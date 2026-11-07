@@ -2,7 +2,7 @@
 
 Aplicativo open source SwiftUI para **diagnóstico verificável de compatibilidade**, com interface simples para iPhone e preparação do projeto para integrações futuras.
 
-## Versão 0.3 — estado real
+## Versão 0.4 — estado real
 
 - Identifica modelo de hardware (por exemplo, `iPhone14,5`), iOS, build e kernel.
 - Classifica a família A15, identifica iOS 27.0.1 e mostra pré-requisitos.
@@ -21,6 +21,17 @@ A tela **Laboratório de análise local** permite executar até **2.000 entradas
 **Escopo**: testes somente no processo do próprio app, com limite de 128 bytes por caso, terminação manual e parada quando o iPhone indicar temperatura elevada. Nenhum arquivo pessoal, driver, kernel ou chip é modificado. O aplicativo não tenta escape de sandbox, injeção de código, brute force de kernel, acesso root ou instalação automática de Sileo.
 
 Rejeições de JSON e Property List **são esperadas** para dados aleatórios e **não significam vulnerabilidades**. Uma inconsistência precisa de investigação e reprodução antes de qualquer conclusão. Mesmo 2.000 casos sem falhas não garantem que o sistema seja seguro.
+
+## Laboratório PDF — 0.4
+
+O botão **Analisar PDF (Calif)** abre um módulo de inspeção estática local:
+- Importação de PDF pelo app Arquivos, com limite de 8 MB e acesso temporário apenas ao arquivo selecionado.
+- Verificação de cabeçalho (%PDF-), versão declarada, marcador final %%EOF, SHA-256 e marcadores textuais de ações, formulários ou anexos.
+- PDF de demonstração benigno, gerado localmente, para testar o fluxo sem baixar arquivos.
+- Relatório exportável, sem upload nem execução de conteúdo de PDF.
+- Progresso explícito dos pré-requisitos da cadeia Calif (parser, kernel, SPTM e Sileo).
+
+**Importante:** esta funcionalidade não contém o exploit privado da Calif, não explora leitores de PDF, não consegue fazer jailbreak no A15 e não detecta todas as ameaças em PDF. A presença de um marcador isolado não comprova malícia ou vulnerabilidade. O usuário deve evitar importar PDFs desconhecidos.
 
 ## Compilar um IPA não assinado pelo GitHub
 
