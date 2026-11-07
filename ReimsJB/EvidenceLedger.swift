@@ -181,8 +181,6 @@ final class EvidenceVault: ObservableObject {
         let directory = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("ReimsResearch", isDirectory: true)
         try fm.createDirectory(at: directory, withIntermediateDirectories: true)
-        var local = directory
-        try? local.setResourceValue(true, forKey: .isExcludedFromBackupKey)
         return directory.appendingPathComponent("evidence.json")
     }
 
