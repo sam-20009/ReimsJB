@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var report = DeviceReport.capture()
     @State private var showBlocker = false
     @State private var showResearch = false
+    @State private var showPDFResearch = false
 
     var body: some View {
         NavigationStack {
@@ -65,6 +66,14 @@ struct ContentView: View {
                         .buttonStyle(.borderedProminent)
 
                         Button {
+                            showPDFResearch = true
+                        } label: {
+                            Label("Analisar PDF (Calif)", systemImage: "doc.text.magnifyingglass")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button {
                             showResearch = true
                         } label: {
                             Label("Laboratório de análise local", systemImage: "checkmark.shield")
@@ -113,6 +122,9 @@ struct ContentView: View {
             .sheet(isPresented: $showResearch) {
                 SafeResearchView()
             }
+            .sheet(isPresented: $showPDFResearch) {
+                PDFResearchView()
+            }
             .alert("Cadeia de jailbreak indisponível", isPresented: $showBlocker) {
                 Button("Entendi", role: .cancel) { }
             } message: {
@@ -130,7 +142,7 @@ struct ContentView: View {
                 Text("ReimsJB")
                     .font(.largeTitle.bold())
                 Spacer()
-                Text("0.2")
+                Text("0.4")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
             }
