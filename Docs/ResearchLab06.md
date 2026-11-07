@@ -6,7 +6,7 @@
 
 - **SecurityKnowledgeBase:** catálogo estático e pesquisável de CVEs publicados pela Apple, ferramentas históricas e conceitos de proteção. Todo item contém fonte, escopo e ressalva de compatibilidade.
 - **Comparador de boletins:** exibe seleção de correções documentadas entre iOS 27.0.1 e 27.2, **sem concluir que o build antigo é explorável**. Não compara binários nem baixa fontes.
-- **EvidenceVault:** dados privados em JSON no armazenamento Application Support do app, excluídos de backup quando permitido; sem rede. Permite registrar hipótese, excluir dados e exportar relatórios por ação manual.
+- **EvidenceVault:** dados privados em JSON no armazenamento Application Support do app, sujeitos à política normal de backup do iOS; sem telemetria do aplicativo. Permite registrar hipótese, excluir dados e exportar relatórios por ação manual.
 - **EvidenceValidator:** diferencia hipótese, observação, reprodução, impacto e confirmação independente. Nunca promove sozinho um teste benigno para vulnerabilidade.
 - **SafeEvidenceExperiment:** executa localmente round-trip JSON sintético com cálculo SHA-256 da entrada para repetição verificável.
 - **SecurityReportBuilder:** prepara rascunho privado para revisão humana conforme campos relevantes para Apple Security Bounty. Nenhum envio automático.
