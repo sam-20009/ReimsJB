@@ -13,6 +13,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.reimsjb.lab
         PRODUCT_NAME: ReimsJB
+        MARKETING_VERSION: "0.5.0"
+        CURRENT_PROJECT_VERSION: "5"
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: YES
@@ -21,3 +23,26 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         IPHONEOS_DEPLOYMENT_TARGET: "16.0"
         CODE_SIGNING_ALLOWED: NO
+  ReimsJBTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ReimsJBTests
+    dependencies:
+      - target: ReimsJB
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.reimsjb.labTests
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ReimsJB.app/ReimsJB"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        CODE_SIGNING_ALLOWED: NO
+schemes:
+  ReimsJB:
+    build:
+      targets:
+        ReimsJB: all
+    test:
+      targets:
+        - ReimsJBTests
