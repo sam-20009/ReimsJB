@@ -2,7 +2,7 @@
 
 Aplicativo open source SwiftUI para **diagnóstico verificável de compatibilidade**, com interface simples para iPhone e preparação do projeto para integrações futuras.
 
-## Versão 0.2 — estado real
+## Versão 0.3 — estado real
 
 - Identifica modelo de hardware (por exemplo, `iPhone14,5`), iOS, build e kernel.
 - Classifica a família A15, identifica iOS 27.0.1 e mostra pré-requisitos.
@@ -13,6 +13,14 @@ Aplicativo open source SwiftUI para **diagnóstico verificável de compatibilida
 - O botão de jailbreak permanece desativado até que um backend real e validado seja integrado. Não faz tentativas repetidas que possam provocar travamentos.
 
 O [ios27-jb-tracker](https://github.com/iMaxTomas/ios27-jb-tracker), de iMaxTomas (CC BY 4.0), foi consultado como fonte informativa sobre o estado das pesquisas. **O tracker não distribui exploits** e não é código de jailbreak. A referência não implica afiliação ou endosso.
+
+## Laboratório de segurança 0.3
+
+A tela **Laboratório de análise local** permite executar até **2.000 entradas determinísticas** contra serializadores e decodificadores de nível de aplicativo (Foundation: JSON, Property List, URLComponents, Base64 e UTF-8). Inclui teste temporário de leitura/escrita na sandbox.
+
+**Escopo**: testes somente no processo do próprio app, com limite de 128 bytes por caso, terminação manual e parada quando o iPhone indicar temperatura elevada. Nenhum arquivo pessoal, driver, kernel ou chip é modificado. O aplicativo não tenta escape de sandbox, injeção de código, brute force de kernel, acesso root ou instalação automática de Sileo.
+
+Rejeições de JSON e Property List **são esperadas** para dados aleatórios e **não significam vulnerabilidades**. Uma inconsistência precisa de investigação e reprodução antes de qualquer conclusão. Mesmo 2.000 casos sem falhas não garantem que o sistema seja seguro.
 
 ## Compilar um IPA não assinado pelo GitHub
 
